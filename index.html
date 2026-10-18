@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>桃園建築案件費用試算</title>
+  <meta name="description" content="建築案件審查、查驗與簽證發照費用試算工具" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>.fee-settings,.legal-settings{margin-top:22px;padding:17px;border:1px solid #d8e9df;border-radius:12px;background:#f5fbf7}.legal-settings{background:#fffaf3;border-color:#f0dfc8}.fee-settings-head{display:flex;justify-content:space-between;align-items:start}.fee-settings h3,.legal-settings h3{margin:4px 0 0;font-size:16px}.custom-tag{font-size:10px;color:#2f7564;border:1px solid #b8d8c6;padding:4px 7px;border-radius:12px}.settings-note{font-size:11px;color:#71807c;line-height:1.6;margin:9px 0 2px}.legal-result{display:flex;align-items:center;gap:10px;margin-top:16px;padding-top:14px;border-top:1px solid #eddfcd}.legal-result span{font-size:11px;color:#8f785d}.legal-result strong{font-family:'Space Grotesk';font-size:18px;color:#9a5d2f;margin-right:auto}.legal-result button{border:1px solid #e2bb8f;background:#fff;color:#9a5d2f;border-radius:8px;padding:8px 10px;font:inherit;font-size:11px;cursor:pointer}.hidden-field{display:none}</style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">築</span><div><strong>費用試算台</strong><small>桃園建築案件工作台</small></div></div>
+      <div class="status"><span class="dot"></span>本機試算 · 不上傳資料</div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <p class="eyebrow">CASE FEE WORKBENCH / 2026</p>
+        <h1>把案件資料丟進來，<br /><em>費用明細自動長出來。</em></h1>
+        <p class="lede">輸入案件類型、面積與工程造價，快速整理應繳的審查、查驗、簽證與相關費用。</p>
+      </div>
+      <div class="hero-note"><span>01</span><p>先選案件類型<br /><b>再補上關鍵數字</b></p></div>
+    </section>
+
+    <section class="workspace">
+      <div class="panel input-panel">
+        <div class="panel-head"><div><span class="step">STEP 01</span><h2>案件資訊</h2></div><button class="ghost" id="resetBtn">清除重填</button></div>
+        <label class="field-label" for="pasteBox">快速貼上案件描述 <span>選填</span></label>
+        <textarea id="pasteBox" rows="3" placeholder="例如：新建住宅，建築面積 1850 平方公尺，工程造價 3200 萬，第一次審查"></textarea>
+        <button class="parse-btn" id="parseBtn">解析案件資訊 <span>↗</span></button>
+        <div class="divider"><span>或手動填寫</span></div>
+
+        <label class="field-label" for="caseType">案件類型</label>
+        <select id="caseType">
+          <option value="permit">建造／雜項執照（簽證發照）</option>
+          <option value="interior">室內裝修</option>
+          <option value="change">變更使用執照</option>
+          <option value="simple">簡易室內裝修</option>
+          <option value="urban">都市設計審議（2,000㎡以下）</option>
+          <option value="special">特種建築物</option>
+          <option value="withdraw">撤案退款試算</option>
+        </select>
+        <div class="grid two">
+          <div><label class="field-label" for="area">申請／建築面積 <span>㎡</span></label><input id="area" type="number" min="0" placeholder="例如 1850" /></div>
+          <div><label class="field-label" for="cost">工程造價 <span>元</span></label><input id="cost" type="number" min="0" placeholder="例如 32000000" /></div>
+        </div>
+        <div class="grid two">
+          <div><label class="field-label" for="reviewCount">審查／審查次數</label><input id="reviewCount" type="number" min="1" value="1" /></div>
+          <div><label class="field-label" for="inspectionCount">查驗次數</label><input id="inspectionCount" type="number" min="0" value="0" /></div>
+        </div>
+        <div class="grid two">
+          <div><label class="field-label" for="units">簡裝單元數</label><input id="units" type="number" min="1" value="1" /></div>
+          <div><label class="field-label" for="paid">已繳費用 <span>退款試算用</span></label><input id="paid" type="number" min="0" placeholder="例如 15000" /></div>
+        </div>
+        <div class="legal-settings">
+          <div class="fee-settings-head"><div><span class="step">COST BASIS</span><h3>總工程造價計算</h3></div><span class="custom-tag">115/01/01 標準</span></div>
+          <p class="settings-note">依桃園市建築物工程造價標準表，自動套用構造、樓層與雜項工程單價。</p>
+          <div class="grid two">
+            <div><label class="field-label" for="legalVersion">工程造價版本</label><select id="legalVersion"><option value="115">115/01/01（最新）</option><option value="110">110/04/01（歷史）</option><option value="105">105/12/12（歷史）</option><option value="county">桃園縣舊制（歷史）</option></select></div>
+            <div><label class="field-label" for="legalArea">建築物總樓地板面積 <span>㎡</span></label><input id="legalArea" type="number" min="0" placeholder="預設帶入申請面積" /></div>
+          </div>
+          <div class="grid two">
+            <div><label class="field-label" for="structure">構造類別</label><select id="structure"><option value="rc">鋼筋混凝土造 RC</option><option value="src">鋼骨鋼筋混凝土造 SRC</option><option value="steel">鋼骨構造</option><option value="steelwall">鋼鐵無牆造</option><option value="lightsteel">輕型鋼架構造</option><option value="brick">加強磚造</option><option value="brickwood">磚造、木造</option></select></div>
+            <div><label class="field-label" for="floors">地上樓層數 <span>層</span></label><input id="floors" type="number" min="1" value="5" /></div>
+          </div>
+          <div class="grid two">
+            <div><label class="field-label" for="excavation">挖方數量 <span>立方公尺</span></label><input id="excavation" type="number" min="0" placeholder="單價 140 元" /></div>
+            <div><label class="field-label" for="filling">填方數量 <span>立方公尺</span></label><input id="filling" type="number" min="0" placeholder="單價 220 元" /></div>
+          </div>
+          <div class="grid two">
+            <div><label class="field-label" for="wallLength">圍牆長度 <span>公尺</span></label><input id="wallLength" type="number" min="0" placeholder="單價 2,150 元" /></div>
+            <div><label class="field-label" for="drainLength">排水溝長度 <span>公尺</span></label><input id="drainLength" type="number" min="0" placeholder="依深度分級" /></div>
+          </div>
+          <div class="grid two">
+            <div><label class="field-label" for="retainingLength">擋土牆長度 <span>公尺</span></label><input id="retainingLength" type="number" min="0" placeholder="選擇高度級距" /></div>
+            <div><label class="field-label" for="retainingHeight">擋土牆高度</label><select id="retainingHeight"><option value="3930">3 公尺以下</option><option value="4570">逾 3～5 公尺</option><option value="7490">5～8 公尺</option><option value="12070">逾 8 公尺</option></select></div>
+          </div>
+          <div class="legal-result"><span>總工程造價</span><strong id="legalTotal">NT$ 0</strong><button id="useLegalBtn" type="button">帶入工程造價</button></div>
+        </div>
+        <div class="check-row"><input id="printing" type="checkbox" checked /><label for="printing">計入執照／文件打字費</label></div>
+        <div class="check-row"><input id="recheck" type="checkbox" /><label for="recheck">都市設計複審</label></div>
+        <div class="fee-settings">
+          <div class="fee-settings-head"><div><span class="step">OPTIONAL</span><h3>事務所設計費</h3></div><span class="custom-tag">可自訂</span></div>
+          <p class="settings-note">公會收費表未規定設計費，請套用你們事務所的報價方式。</p>
+          <div class="grid two">
+            <div><label class="field-label" for="designMethod">計算方式</label><select id="designMethod"><option value="percent">工程造價百分比</option><option value="area">按面積計價</option><option value="fixed">固定金額</option></select></div>
+            <div><label class="field-label" for="designRate">設計費率／單價 <span id="designUnit">%</span></label><input id="designRate" type="number" min="0" step="0.1" placeholder="例如 5" /></div>
+          </div>
+          <div class="check-row"><input id="includeDesign" type="checkbox" /><label for="includeDesign">將設計費加入估算合計</label></div>
+        </div>
+      </div>
+
+      <div class="panel result-panel">
+        <div class="panel-head"><div><span class="step">STEP 02</span><h2>應繳費用</h2></div><button class="copy-btn" id="copyBtn">複製明細</button></div>
+        <div class="total-card"><span>估算合計</span><strong id="total">NT$ 0</strong><small id="resultHint">填寫左側資料後即時更新</small></div>
+        <div id="breakdown" class="breakdown"><div class="empty"><span>✦</span><p>等待案件資料</p><small>費用明細會顯示在這裡</small></div></div>
+        <div class="notice" id="notice"><span>i</span><p>這是依目前匯入的公會收費標準所做的估算；正式送件前，請以最新公告及承辦單位核定金額為準。</p></div>
+      </div>
+    </section>
+
+    <section class="sources panel">
+      <div class="panel-head"><div><span class="step">REFERENCE</span><h2>目前採用的收費依據</h2></div><span class="source-count">8 份文件</span></div>
+      <div class="source-grid">
+        <div><b>簽證發照</b><span>112/07/01 起</span></div><div><b>室內裝修</b><span>112/07/16 起</span></div><div><b>變更使用執照</b><span>112/07/16 起</span></div><div><b>簡易裝修</b><span>114/08/08 起</span></div><div><b>都市設計審議</b><span>112/10/01 起</span></div><div><b>特種建築物</b><span>114/08/20 通過</span></div><div><b>撤案退款</b><span>109/03/01 起</span></div><div><b>鑑定費</b><span>102/06/28 通過</span></div>
+      </div>
+    </section>
+    <footer>費用試算台 · 內部工作工具 <span>資料僅在此瀏覽器處理</span></footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
